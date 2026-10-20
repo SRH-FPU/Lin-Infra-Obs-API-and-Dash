@@ -2,7 +2,7 @@
 # Setup
 
 # Enable firewall if disables
-if "inactive"=(sudo ufw status | awk 'print $2'); then
+if [$"(sudo ufw status | awk '{print $2}')" = "inactive"]; then
   sudo ufw enable
   sudo ufw allow from 23.128.112.34 to any port 9070 proto tcp
 fi
@@ -14,7 +14,7 @@ function getRealCPU(){
   local prev_idle=$((idle + iowait))
   local prev_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
   
-  sleep $(calculationInterval)
+  sleep $calculationInterval
 
   read -r _ user nice system idle iowait irq softirq steal < /proc/stat
   local now_idle=$((idle + iowait))
@@ -31,28 +31,29 @@ function getRealMemory(){
   local availableMemory=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
   local totalMemory=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
 
-  echo $(((100*availableMemory)/totalMemory))
+  echo $((100*(totalMemory-availableMemory)/totalMemory))
 }
 
 # Returns % disk space used.
 function getRealDisk(){
-  echo $((df -h / | awk 'NR==2 {print $5}'))
+  echo $((df -h / | awk 'NR==2 {print $5}' | tr -d '%'))
 }
 
 # Returns download and upload bandwitdh usage in KB/s 
 function getRealNewtork(){
-  rec1=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
-  trn1=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
+  interface="eth0"
+  rec1=$(cat /sys/class/net/$interface/statistics/rx_bytes)
+  trn1=$(cat /sys/class/net/$interface/statistics/tx_bytes)
 
-  sleep $(calculationInterval)
+  sleep $calculationInterval
 
-  rec2=$(cat /sys/class/net/$INTERFACE/statistics/rx_bytes)
-  trn2=$(cat /sys/class/net/$INTERFACE/statistics/tx_bytes)
+  rec2=$(cat /sys/class/net/$interface/statistics/rx_bytes)
+  trn2=$(cat /sys/class/net/$interface/statistics/tx_bytes)
 
-  usageDown=$(((rec2 - rec1)/1024))
-  usageUp=$(((trn2 - trn1)/1024))
+  usageDown=$((10*(rec2 - rec1)/1024))
+  usageUp=$((10*(trn2 - trn1)/1024))
 
-  echo '${usageDown} ${usageUp}'
+  echo "${usageDown} ${usageUp}"
 }
 
 # Execute
@@ -63,5 +64,7 @@ while true; do
   read -r net_down net_up <<< "$(getRealNewtork)"
 
   # Output to json.
-  printf '{"cpu": "%d", "mem": "%d"", "disk": "%s"", "netDown": "%d"", "netUp": "%d"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
+  printf '{"cpu": "%s", "mem": "%s"", "disk": "%s"", "netDown": "%s"", "netUp": "%s"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
+
+  sleep 1
 done
