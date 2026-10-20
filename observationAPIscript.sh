@@ -1,6 +1,12 @@
 #!/bin/bash
-# Outputs: Real-time cpu, memory, disk, and bandwith (download+upload) usage. 
+# Setup
 
+# Enable firewall if disables
+if "inactive"=(sudo ufw status | awk 'print $2'); then
+  sudo ufw enable
+  sudo ufw allow from IPaddress to any port 9070 proto tcp
+fi
+23.128.112.34
 calculationInterval=0.1
 
 # Calculates average cpu over the calculation interval.
@@ -50,9 +56,13 @@ function getRealNewtork(){
   echo '${usageDown} ${usageUp}'
 }
 
-cpu_real=$(getRealCPU)
-mem_real=$(getRealMemory)
-disk_real=$(getRealDisk)
-read -r net_down net_up <<< "$(getRealNewtork)"
+# Execute
+while true; do
+  cpu_real=$(getRealCPU)
+  mem_real=$(getRealMemory)
+  disk_real=$(getRealDisk)
+  read -r net_down net_up <<< "$(getRealNewtork)"
 
-printf '{"cpu": "%d", "mem": "%d"", "disk": "%s"", "netDown": "%d"", "netUp": "%d"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
+  # Output to json.
+  printf '{"cpu": "%d", "mem": "%d"", "disk": "%s"", "netDown": "%d"", "netUp": "%d"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
+done
