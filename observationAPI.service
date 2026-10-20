@@ -5,7 +5,7 @@ After=network-online.target
 
 [Service]
 Type=exec
-User=observationAPI
+User=obsAPI
 WorkingDirectory=/var/lib/observationAPI
 ExecStart=/usr/local/bin/observationAPIscript.sh
 WatchdogSec=30
