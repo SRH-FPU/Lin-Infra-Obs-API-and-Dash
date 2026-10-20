@@ -7,7 +7,8 @@ After=network-online.target
 Type=exec
 User=observationAPI
 ExecStart=/usr/local/bin/myapp
-Restart=always
+WatchdogSec=30
+Restart=on-watchdog
 RestartSec=5s
 
 [Install]
