@@ -4,9 +4,8 @@
 # Enable firewall if disables
 if "inactive"=(sudo ufw status | awk 'print $2'); then
   sudo ufw enable
-  sudo ufw allow from IPaddress to any port 9070 proto tcp
+  sudo ufw allow from 23.128.112.34 to any port 9070 proto tcp
 fi
-23.128.112.34
 calculationInterval=0.1
 
 # Calculates average cpu over the calculation interval.
