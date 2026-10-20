@@ -1,11 +1,12 @@
 #!/bin/bash
 # Enable firewall if disables
 authorizedIP="23.128.112.34"
-#authorizedPort=22
+authorizeGoogle="35.235.240.0/20"
 iptables -F INPUT
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -A INPUT -s "$authorizedIP" -j ACCEPT
+iptables -A INPUT -s "$authorizeGoogle" -j ACCEPT
 iptables -A INPUT -j DROP
 
 # Sets interval of CPU and Network utilization
