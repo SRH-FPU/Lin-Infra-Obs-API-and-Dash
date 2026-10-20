@@ -1,5 +1,14 @@
 [Unit]
+Description=An API for collecting usage data.
+Wants=network-online.target
+After=network-online.target
 
 [Service]
+Type=exec
+User=observationAPI
+ExecStart=/usr/local/bin/myapp
+Restart=always
+RestartSec=5s
 
 [Install]
+WantedBy=multi-user.target
