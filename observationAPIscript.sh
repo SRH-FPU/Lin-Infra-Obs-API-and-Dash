@@ -37,7 +37,7 @@ function getRealCPU(){
 # Calculates % memory used.
 function getRealMemory(){
   local availableMemory=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
-  local totalMemory=$(awk '/^MemAvailable:/ {print $2}' /proc/meminfo)
+  local totalMemory=$(awk '/^MemTotal:/ {print $2}' /proc/meminfo)
 
   echo $((100*(totalMemory-availableMemory)/totalMemory))
 }
