@@ -6,6 +6,7 @@ After=network-online.target
 [Service]
 Type=exec
 User=observationAPI
+WorkingDirectory=/var/lib/observationAPI
 ExecStart=/usr/local/bin/myapp
 WatchdogSec=30
 Restart=on-watchdog
