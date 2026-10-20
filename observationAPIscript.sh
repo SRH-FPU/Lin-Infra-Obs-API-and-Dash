@@ -50,6 +50,10 @@ function getRealDisk(){
 # Returns download and upload bandwitdh usage in KB/s 
 function getRealNewtork(){
   interface="eth0"
+  if [ ! -d "/sys/class/net/$interface" ]; then
+    interface=$(ip route show | awk '/default/ {print $5}' | head -n1)
+  fi
+  
   rec1=$(cat /sys/class/net/$interface/statistics/rx_bytes)
   trn1=$(cat /sys/class/net/$interface/statistics/tx_bytes)
 
