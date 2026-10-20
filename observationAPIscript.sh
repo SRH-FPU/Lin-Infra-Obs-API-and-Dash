@@ -72,7 +72,7 @@ while true; do
   read -r net_down net_up <<< "$(getRealNewtork)"
 
   # Output to json.
-  printf '{"cpu": "%s", "mem": "%s"", "disk": "%s"", "netDown": "%s"", "netUp": "%s"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
+  printf '{"cpu": "%s", "mem": "%s", "disk": "%s", "netDown": "%s", "netUp": "%s"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
 
   sleep 1
 done
