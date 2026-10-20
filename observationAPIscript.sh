@@ -1,11 +1,14 @@
 #!/bin/bash
-# Setup
-
 # Enable firewall if disables
-#if [ "$(sudo ufw status | awk '{print $2}')" = "inactive" ]; then
-#  sudo ufw enable
-#  sudo ufw allow from 23.128.112.34 to any port 9070 proto tcp
-#fi
+authorizedIP="23.128.112.34"
+#authorizedPort=22
+iptables -F INPUT
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A INPUT -s "$authorizedIP" -j ACCEPT
+iptables -A INPUT -j DROP
+
+# Sets interval of CPU and Network utilization
 calculationInterval=0.1
 
 # Calculates average cpu over the calculation interval.
