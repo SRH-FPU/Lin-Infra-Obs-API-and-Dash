@@ -2,7 +2,7 @@
 # Setup
 
 # Enable firewall if disables
-if [$"(sudo ufw status | awk '{print $2}')" = "inactive"]; then
+if [ "$(sudo ufw status | awk '{print $2}')" = "inactive" ]; then
   sudo ufw enable
   sudo ufw allow from 23.128.112.34 to any port 9070 proto tcp
 fi
@@ -23,7 +23,12 @@ function getRealCPU(){
 
   local diff_idle=$((now_idle - prev_idle))
   local diff_total=$((now_total - prev_total))
-  echo $((100 * (diff_total - diff_idle) / diff_total))
+  
+  if [ "$diff_total" -eq 0 ]; then
+    echo 0
+  else
+    echo $((100 * (diff_total - diff_idle) / diff_total))
+  fi
 }
 
 # Calculates % memory used.
@@ -36,7 +41,7 @@ function getRealMemory(){
 
 # Returns % disk space used.
 function getRealDisk(){
-  echo $((df -h / | awk 'NR==2 {print $5}' | tr -d '%'))
+  echo $(df -h / | awk 'NR==2 {print $5}' | tr -d '%')
 }
 
 # Returns download and upload bandwitdh usage in KB/s 
