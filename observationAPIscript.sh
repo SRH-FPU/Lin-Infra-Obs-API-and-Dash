@@ -54,3 +54,5 @@ cpu_real=$(getRealCPU)
 mem_real=$(getRealMemory)
 disk_real=$(getRealDisk)
 read -r net_down net_up <<< "$(getRealNewtork)"
+
+printf '{"cpu": "%d", "mem": "%d"", "disk": "%s"", "netDown": "%d"", "netUp": "%d"}\n' "$cpu_real" "$mem_real" "$disk_real" "$net_down" "$net_up" > observationAPI.json
