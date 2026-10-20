@@ -1,5 +1,5 @@
 #!/bin/bash
-# Outputs: Real-time cpu, memory, disk, and network usage. 
+# Outputs: Real-time cpu, memory, disk, and network bandwidth usage. 
 
 # Calculates average cpu in the last 0.1 seconds
 function getRealCPU(){
@@ -27,7 +27,7 @@ function getRealMemory(){
 }
 
 function getRealDisk(){
-
+  echo $((df -h / | awk 'NR==2 {print $5}'))
 }
 
 function getRealNewtork(){
