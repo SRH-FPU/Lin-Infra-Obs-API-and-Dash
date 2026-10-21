@@ -16,13 +16,13 @@ calculationInterval=0.1
 function getRealCPU(){
   read -r _ user nice system idle iowait irq softirq steal < /proc/stat
   local prev_idle=$((idle + iowait))
-  local prev_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+  local prev_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
   
   sleep $calculationInterval
 
   read -r _ user nice system idle iowait irq softirq steal < /proc/stat
   local now_idle=$((idle + iowait))
-  local now_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+  local now_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
 
 
   local diff_idle=$((now_idle - prev_idle))
