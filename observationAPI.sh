@@ -2,12 +2,12 @@
 # Enable firewall if disables
 authorizedIP="23.128.112.34"
 authorizeGoogle="35.235.240.0/20"
-iptables -F INPUT
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -s "$authorizedIP" -j ACCEPT
-iptables -A INPUT -s "$authorizeGoogle" -j ACCEPT
-iptables -A INPUT -j DROP
+sudo iptables -F INPUT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A INPUT -s "$authorizedIP" -j ACCEPT
+sudo iptables -A INPUT -s "$authorizeGoogle" -j ACCEPT
+sudo iptables -A INPUT -j DROP
 
 # Sets interval of CPU and Network utilization
 calculationInterval=0.1
