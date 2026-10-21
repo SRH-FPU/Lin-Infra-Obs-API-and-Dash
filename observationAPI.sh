@@ -14,13 +14,13 @@ calculationInterval=0.1
 
 # Calculates average cpu over the calculation interval.
 function getRealCPU(){
-  read -r _ user nice system idle iowait irq softirq steal < /proc/stat
+  read -r cpu_label user nice system idle iowait irq softirq steal < <(grep '^cpu ' /proc/stat)
   local prev_idle=$((idle + iowait))
   local prev_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
   
   sleep $calculationInterval
 
-  read -r _ user nice system idle iowait irq softirq steal < /proc/stat
+  read -r cpu_label user nice system idle iowait irq softirq steal < <(grep '^cpu ' /proc/stat)
   local now_idle=$((idle + iowait))
   local now_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
 
