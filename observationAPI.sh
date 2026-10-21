@@ -2,27 +2,27 @@
 # Enable firewall if disables
 authorizedIP="23.128.112.34"
 authorizeGoogle="35.235.240.0/20"
-iptables -F INPUT
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
-iptables -A INPUT -s "$authorizedIP" -j ACCEPT
-iptables -A INPUT -s "$authorizeGoogle" -j ACCEPT
-iptables -A INPUT -j DROP
+sudo iptables -F INPUT
+sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A INPUT -s "$authorizedIP" -j ACCEPT
+sudo iptables -A INPUT -s "$authorizeGoogle" -j ACCEPT
+sudo iptables -A INPUT -j DROP
 
 # Sets interval of CPU and Network utilization
 calculationInterval=0.1
 
 # Calculates average cpu over the calculation interval.
 function getRealCPU(){
-  read -r _ user nice system idle iowait irq softirq steal < /proc/stat
+  read -r cpu_label user nice system idle iowait irq softirq steal guest guest_nice < <(grep '^cpu ' /proc/stat)
   local prev_idle=$((idle + iowait))
-  local prev_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+  local prev_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
   
   sleep $calculationInterval
 
-  read -r _ user nice system idle iowait irq softirq steal < /proc/stat
+  read -r cpu_label user nice system idle iowait irq softirq steal guest guest_nice < <(grep '^cpu ' /proc/stat)
   local now_idle=$((idle + iowait))
-  local now_total=$((user + nice + system + idle + iowait + irq + softirq + steal))
+  local now_total=$((${user:-0} + ${nice:-0} + ${system:-0} + ${idle:-0} + ${iowait:-0} + ${irq:-0} + ${softirq:-0} + ${steal:-0}))
 
 
   local diff_idle=$((now_idle - prev_idle))
