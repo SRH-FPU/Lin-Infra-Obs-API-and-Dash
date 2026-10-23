@@ -3,11 +3,8 @@ import time
 import paramiko, json, asyncio
 import tkinter as tk
 from async_tkinter_loop import async_handler, async_mainloop
-from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from numpy.f2py.crackfortran import endifs
-from sqlalchemy import false
 
 # Setup
 vmUser = "obsAPI"
@@ -220,6 +217,16 @@ class Application:
 
     async def on_disconnect(self):
         self.doJsonParsing = False
+        self.cpuX.clear()
+        self.cpuY.clear()
+        self.ramX.clear()
+        self.ramY.clear()
+        self.diskX.clear()
+        self.diskY.clear()
+        self.netUpX.clear()
+        self.netUpY.clear()
+        self.netDownX.clear()
+        self.netDownY.clear()
         client.close()
 
 
